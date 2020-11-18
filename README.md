@@ -4,6 +4,9 @@ Documenting instalation and running WRF on ARGO cluster
 # Before you begin
 Contact the [ARGO support team]{orcadmin@gmu.edu} to set up your account. Include Lucas in your email to receive access to the HAQ-LAB storage drive.
 
+# Review the ARGO Wiki page
+See especially information on accessing the cluster, transfering data, and running/managing jobs. [Link](http://wiki.orc.gmu.edu/index.php/Main_Page)
+
 # HAQ-LAB storage
 As of November 2020, the `HAQ-LAB` drive has 1TB of storage space available. It is located at /projects/HAQ_LAB. You can create a symbolic link to your home directory with the command `ln -s /projects/HAQ_LAB HAQ_LAB`.
 
