@@ -14,3 +14,6 @@ $ mkdir YOUR_USERNAME
 ```
 
 This is your space, but remember that the storage space is shared with the group. Be sure to use the `scratch` space for temporary files, and communicate with group members to ensure everyone has enough space for their work.
+
+# Installing WRF
+The process is documented on the Wiki page of this repository.
