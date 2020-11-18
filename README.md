@@ -2,7 +2,7 @@
 Documenting instalation and running WRF on ARGO cluster
 
 # Before you begin
-Contact the [ARGO support team]{orcadmin@gmu.edu} to set up your account. Include Lucas in your email to receive access to the HAQ-LAB storage drive.
+Contact the [ARGO support team](orcadmin@gmu.edu) to set up your account. Include Lucas in your email to receive access to the HAQ-LAB storage drive.
 
 # Review the ARGO Wiki page
 See especially information on accessing the cluster, transfering data, and running/managing jobs. [Link](http://wiki.orc.gmu.edu/index.php/Main_Page)
