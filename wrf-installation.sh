@@ -17,15 +17,17 @@
 #5.	Mpich 3.3.2
 
 
-login into argo cluster account using your id and password
+#login into argo cluster account using your id and password
 
-goto this directory  /projects/HAQ_LAB/mrasel using following command:
+#goto this directory  /projects/HAQ_LAB/mrasel using following command:
 
 cd /projects/HAQ_LAB/mrasel
 
-here i've chosen mrasel, anyone else can create their own directory under HAQ_LAB
+#here i've chosen mrasel, one can create their own directory under HAQ_LAB
 
-make directory wrf using: mkdir wrf
+#make directory wrf using: 
+
+mkdir wrf
 
 cd wrf
 
@@ -33,11 +35,13 @@ mkdir WRF
 
 cd WRF
 
-mkdir downloads (here we'll download our libraries to install)
+mkdir downloads 
+
+#(here we'll download our libraries, WRF and WPS source codes)
 
 cd downloads
 
-#now we'll start downloading libraries inside of downloads directory
+#now we'll start downloading libraries and WRF WPS source code inside of downloads directory
 
 wget ftp://ftp.unidata.ucar.edu/pub/netcdf/old/netcdf-4.1.2.tar.gz
 
@@ -54,24 +58,26 @@ wget https://github.com/wrf-model/WRF/archive/v4.2.1.tar.gz
 wget https://github.com/wrf-model/WPS/archive/v4.2.tar.gz
 
 
-now check if we've gcc/fortran c compiler or not. to check write on terminal:
+#now check if we've gcc/fortran c compiler or not. to check write on terminal:
 
 which gcc
 
-if gcc is already installed then it'll show the installtion path. otherwise we have to download and install it
+#if gcc is already installed then it'll show the installtion path. otherwise we have to download and install it
 
 #extracting all downloaded files
 
 for i in *.gz; do tar xzf $i ; done
 
-now goto /projects/HAQ_LAB/mrasel/wrf/WRF
+#now goto /projects/HAQ_LAB/mrasel/wrf/WRF
 
-mkdir libs (outside of downloads directory: here we’ll store installed libraries files)
+mkdir libs
+
+# (outside of downloads directory: here we’ll store installed libraries files)
 
 
-now inside of libs directory create folder netcdf, mpich and grib2 
+#now inside of libs directory create folder netcdf, mpich and grib2 
 
-
+mkdir netcdf mpich grib2
 
 #grib2 is a file format that meteorological data are distributed in
 
@@ -85,19 +91,24 @@ echo $LIBDIR
 #for LIBPNG I need to use ZLIB so that I’ll first compile ZLIB
 
 #now use terminal and goto downloads folder of WRF and then 
+
+#goto 
+
+cd /projects/HAQ_LAB/mrasel/wrf/WRF/downloads
+
 cd zlib-1.2.11
 
 ./configure --prefix=$LIBDIR/grib2
 
 make
 make install 
-(this command will take compiled library to our mentioned folder grib2)
+#(this command will take compiled library to our mentioned folder grib2)
 
 cd ..
 
 cd libpng-1.6.37
 
-#we need to configure it but at the same time we need to specify path of zlib. Libpng need to use zlib that we installed earlier step
+#we need to configure it but at the same time we need to specify path of zlib. Libpng need to use zlib that we installed in earlier step
 
 
 ./configure --prefix=$LIBDIR/grib2 LDFLAGS="-L$LIBDIR/grib2/lib" CPPFLAGS="-I$LIBDIR/grib2/include"
@@ -120,7 +131,7 @@ cd ..
 cd netcdf-4.1.2
 
 ./configure --prefix=$LIBDIR/netcdf --disable-dap --disable-netcdf-4
-(we’re installing part of netcdf; not all of them)
+#(we’re installing part of netcdf; not all of them)
 
 make
 make install
@@ -138,15 +149,15 @@ make install
 cd ..
 
 
-take WPS-4.2  WRF-4.2.1 folder from downloads folder to outside of download folder
+#take WPS-4.2  WRF-4.2.1 folder from downloads folder to outside of download folder (/projects/HAQ_LAB/mrasel/wrf/WRF/)
 
 cd WRF-4.2.1
 
 export LIBDIR=/projects/HAQ_LAB/mrasel/wrf/WRF/libs 
-(we can use LIBDIR for easy input)
+#(we can use LIBDIR for easy input)
 
 export NETCDF=$LIBDIR/netcdf 
-(compilation path set for netcdf)
+#(compilation path set for netcdf)
 
 
 export PATH= $LIBDIR/mpich/bin:$PATH
@@ -154,7 +165,7 @@ export PATH= $LIBDIR/mpich/bin:$PATH
 echo $PATH
 
 
-to check: which mpicc (it'll show path)
+#to check: which mpicc (it'll show path)
 
 echo $NETCDF
 
@@ -163,9 +174,9 @@ export JASPERINC=$LIBDIR/grib2/include
 
 ./configure
 
-Select 34 then 1 (dmpar and basic)
+#Select 34 then 1 (dmpar gfortran/gcc and basic)
 
-We’ll get a file configure.wrf in that folder
+#We’ll get a file configure.wrf in that folder (/projects/HAQ_LAB/mrasel/wrf/WRF/WRF-4.2.1/)
 
 which mpi90
 
@@ -180,41 +191,40 @@ cd main/
 
 ./real.exe
 
-(starting wrf task o of 1… it means it’ll work)
-
-cd ../..
+#(starting wrf task o of 1… it means wrf has installed successfully)
 
 
 cd /projects/HAQ_LAB/mrasel/wrf/WRF/WPS-4.2
 
-export WRF_DIR=../WRF/WRF4.2.1
+export WRF_DIR=/projects/HAQ_LAB/mrasel/wrf/WRF/WRF-4.2.1
 
 
 ./configure
 
 3
 
-Now we’ll have configure.wps
+#Now we’ll have configure.wps inside of /projects/HAQ_LAB/mrasel/wrf/WRF/WPS-4.2 directory
 
 ./compile
 
 ls
 
-we'll have these 3 files;
+#we'll have these 3 files;
 
-./geogrid.exe
-./ungrib.exe
-./metgrid.exe
+#./geogrid.exe
+#./ungrib.exe
+#./metgrid.exe
 
-I need to set path of LD_LIBRARY permanently other wise I have to run Export LD_LIBRARY_PATH=$LIBDIR/netcdf/lib:$LD_LIBRARY_PATH   Every time
+#I need to set path of LD_LIBRARY permanently other wise I'll have to run export LD_LIBRARY_PATH=$LIBDIR/netcdf/lib:$LD_LIBRARY_PATH everytime i open terminal
 
 cd 
- (it'll take to me home directory. everytime i login into argo, i want this following path to load automatically)
+
+#(it'll take to me home directory. everytime i login into argo, i want this following path to load automatically)
 
 
 vi .bashrc
 
-at the End of the file put the path
+#at the End of the file put the path
 
 export LD_LIBRARY_PATH=/projects/HAQ_LAB/mrasel/wrf/WRF/libs/netcdf/lib:$LD_LIBRARY_PATH
 
@@ -225,17 +235,24 @@ export PATH=/projects/HAQ_LAB/mrasel/wrf/WRF/libs/mpich/bin:$PATH
 
 
 
-:wq (to save and quit)
+:wq 
+
+#(to save and quit)
 
 
-reopen terminal and login into cluster using user id and password and now check library path
+#reopen terminal and login into cluster using user id and password and now check library path
 which mpirun
-cd WRF/wrf-4.1/main
+cd projects/HAQ_LAB/wrf/WRF/wrf-4.1/main
 ./wrf.exe
-it'll show starting 0 of 1 task...
+#it'll show starting 0 of 1 task...
 
 
-now goto cd /projects/HAQ_LAB/mrasel/wrf/WRF/
+#now goto 
+
+cd /projects/HAQ_LAB/mrasel/wrf/WRF/
+
+
+#downloading Static Geography Data
 
 mkdir geog
 
@@ -247,18 +264,19 @@ tar xzf geog_high_res_mandatory.tar.gz
 
 
 
-Wps manual here: https://www2.mmm.ucar.edu/wrf/users/docs/user_guide_v4/v4.2/users_guide_chap3.html
 
-In WPS folder file name namelist.wps fileis where we can change parameters
+#Wps manual here: https://www2.mmm.ucar.edu/wrf/users/docs/user_guide_v4/v4.2/users_guide_chap3.html
+
+#Inside of WPS folder file name namelist.wps file is the file where we can change parameters
 
 
-I’ve moved all the files from inside of WPS_geog folder to geog folder and then deleted wps_geog folder
+#now I’ve moved all the files from inside of WPS_geog folder to geog folder (/projects/HAQ_LAB/mrasel/wrf/WRF/geog) and then deleted wps_geog folder
 
-Goto WPS directory and open namelist.wps
+#Goto WPS directory (/projects/HAQ_LAB/mrasel/wrf/WRF/WPS-4.2) and open namelist.wps
 
-Max_dom is telling system how many nesting level we want
+#Max_dom is telling system how many nesting level we want
 
-Then I changed these parameters for initial test
+#Then I changed these parameters for initial test
 
 max_dom = 1,
  start_date = '2006-08-16_12:00:00','2006-08-16_12:00:00',
@@ -287,28 +305,33 @@ max_dom = 1,
 /
 
 
-Go to WPS directory
+#Go to WPS directory (/projects/HAQ_LAB/mrasel/wrf/WRF/WPS-4.2)
 
 ./geogrid.exe
 
-Ls
+ls
 
-There will be a file geo_em.d01.nc
-
-
-Ncview geo_em…. (ncview need to be installed on cluster)
+#There will be a file named geo_em.d01.nc
 
 
-Downloading GFS data
+#ncview geo_em.d01.nc (ncview needs to be installed on cluster to see .nc files)
 
-Goto https://nomads.ncep.noaa.gov/pub/data/nccf/com/gfs/prod/
 
-Downloading GFS data to use metgrid ungrib command
+#Downloading GFS data
 
-I chose gfs.20201117/00
-https://nomads.ncep.noaa.gov/pub/data/nccf/com/gfs/prod/gfs.20201117/00/
+cd /projects/HAQ_LAB/mrasel/wrf/WRF/scripts
 
-open a text editor
+#here i'll write down scripts to download GFS files automatically
+
+#Goto https://nomads.ncep.noaa.gov/pub/data/nccf/com/gfs/prod/
+
+#Downloading GFS data to use metgrid ungrib command
+
+#for example, I chose gfs.20201117/00
+
+#https://nomads.ncep.noaa.gov/pub/data/nccf/com/gfs/prod/gfs.20201117/00/
+
+#open a text editor or .sh script
 
 #!/bin/bash
 
@@ -323,57 +346,67 @@ url = $ {server}/${directory}/${file}
 
 echo $url
 
-save file as download_gfs.sh
+#save file as download_gfs.sh
 
-goto terminal 
+#goto terminal 
 
-chmod +x download_gfs.sh.rtf
+chmod +x download_gfs.sh
+
+./download_gfs.sh
 
 
-we'll have 3 files:
+#we'll have 3 files:
 
-gfs.t00z.pgrb2.0p50.f000  
-gfs.t00z.pgrb2.0p50.f003 
-gfs.t00z.pgrb2.0p50.f006
+#gfs.t00z.pgrb2.0p50.f000  
+#gfs.t00z.pgrb2.0p50.f003 
+#gfs.t00z.pgrb2.0p50.f006
 
-or 
+#or 
 
-just downloaded manually 0.5 degree files
-gfs.t00z.pgrb2.0p50.f000  
-gfs.t00z.pgrb2.0p50.f003 
-gfs.t00z.pgrb2.0p50.f006
+#just downloaded manually 0.5 degree files
 
+#gfs.t00z.pgrb2.0p50.f000  
+#gfs.t00z.pgrb2.0p50.f003 
+#gfs.t00z.pgrb2.0p50.f006
+
+
+#link to the correct Vtable (GFS, for this case):
 
 ln -s ungrib/Variable_Tables/Vtable.GFS ./Vtable
 
+#linking in the input GFS data
+
 ./link_grib.csh /projects/HAQ_LAB/mrasel/wrf/WRF/GFS/
 
-Now you will see 3 files GRIBFILE.AAA GRIBFILE.AAB GRIBFILE.AAC
+#Now you will see 3 files GRIBFILE.AAA GRIBFILE.AAB GRIBFILE.AAC
 
 
 
-Now you will see 3 files GRIBFILE.AAA GRIBFILE.AAB GRIBFILE.AAC
+#Goto wps folder (/projects/HAQ_LAB/mrasel/wrf/WRF/WPS-4.2) and open namelist.wps file to change start date and end date
 
-
-Goto wps folder and open namelist.wps file to change start date and end date
 start_date = '2020-11-17_00:00:00','2006-08-16_12:00:00',
- end_date   = '2020-11-17_06:00:00','2006-08-16_12:00:00',
- interval_seconds = 10800
+end_date   = '2020-11-17_06:00:00','2006-08-16_12:00:00',
+interval_seconds = 10800
 
-Interval seconds 3x60x60 = 10800
+#Interval seconds 3x60x60 = 10800
 
 
-Now 
+#Now 
 ./ungrib.exe
 
-Now ls
-We’ll have 3 files 
-FILE:2020-11-17_06 FILE:2020-11-17_03 FILE:2020-11-17_00
+#Now 
+
+ls
+
+#We’ll have 3 files 
+
+#FILE:2020-11-17_06 FILE:2020-11-17_03 FILE:2020-11-17_00
 
 ln -s metgrid/METGRID.TBL.ARW ./METGRID.TBL
+
 ./metgrid.exe
 
-We’ll have 3 files
+#We’ll have 3 files
 
 met_em.d01.2020-11-17_00:00:00.nc
 met_em.d01.2020-11-17_03:00:0.nc
@@ -381,35 +414,39 @@ met_em.d01.2020-11-17_06:00:00.nc
 
 
 
-geo_em static geography
+#geo_em is static geography file
 
-met_em meteorology file
+#met_em is meteorology file
 
-we can view nc file using ncview command (need to talk to cluster)
+#we can view nc file using ncview command (need to talk to cluster people to install ncview)
 
 
-Running real and wrf
+#Running real and wrf
 
-Real.exe wrf will create initial and boundary condition of atmosphere (met_em file will be used here)
-Wrf.exe then will integrate through time and simulate how atmosphere will develop
+#Real.exe wrf will create initial and boundary condition of atmosphere (met_em file will be used here)
 
-Linking met to wrf-run
+#wrf.exe then will integrate through time and simulate how atmosphere will develop
+
+#Linking met to wrf-run
 
 ln -s /projects/HAQ_LAB/mrasel/wrf/WRF/WPS-4.2/met_em* .
 
 ls
 
-check if linking has done properly by using mc commander and check linking directory
+#check if linking has done properly by using mc commander and check linking directory
 
-open namelist.input file using text editor inside of run folder of WRF directory
+#open namelist.input file using text editor inside of run folder of WRF directory (/projects/HAQ_LAB/mrasel/wrf/WRF/WRF-4.2.1/run)
 
-several sections
+#several sections
 
-time , domain, dynamics, physics section
+#time , domain, dynamics, physics section
 
-also open namelist.wps file from WPS directory. We need some information from here to namelist.input file
+#also open namelist.wps file from WPS directory. We need some information from here to input in namelist.input file
 
-time section first column change. We can neglect other since we’re using 1 domain only
+#time section first column change. We can neglect others since we’re using 1 domain only
+
+
+#for example: (inside of namelist.input file)
 
 &time_control
  run_days                            = 0,
@@ -512,35 +549,32 @@ time section first column change. We can neglect other since we’re using 1 dom
  /
 
 
-Run hours should be 6 since we are running for 6 hrs here
+#Run hours should be 6 since we are running for 6 hrs here
 
 
-Save it
+#Save it
 
-Use mpirun for multiprocessing
+#Use mpirun for multiprocessing
 
-To see how many processor we have cat /proc/cpuinfo
+#To see how many processor we have cat /proc/cpuinfo
 
-mpirun -n 8 ./real.exe (8 for 8 cores bt I can change it)
-To check if it worked type mc
+mpirun -n 8 ./real.exe
 
-We’ve got error 33 level not matching 34. 33+ surface level = 34. Change it into 
-num_metgrid_levels                  = 34,
+#(8 for 8 cores bt I can change it)
+#To check if it worked type mc
 
-check again mc goto result file: at the end it’ll show success complete
-
-you can check wrfbdy and wrfinput file using ncview (install at cluster)
+#you can check wrfbdy and wrfinput file using ncview (install at cluster)
 
 
-now run wrf.exe
+#now run wrf.exe
 
 mpirun -n 8 ./wrf.exe
 
-to check if its running open another window
+#to check if its running open another window
 
-goto run folder
+#goto run folder
 
-tail -F rsl.out.0006 or htop
+#tail -F rsl.out.0006 or htop
 
 
 
