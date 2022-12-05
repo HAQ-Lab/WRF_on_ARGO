@@ -20,3 +20,6 @@ This is your space, but remember that the storage space is shared with the group
 
 # Installing WRF
 The process is documented on the Wiki page of this repository.
+
+# WRF online tutorial
+The WRF online tutorial usually will be held online once a year (usually in the winter). The registration will be free for the first 30 University students. Please find more info here: https://www.mmm.ucar.edu/events/tutorials/wrf 
